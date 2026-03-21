@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-    <h3>Bug Evaluation</h3>
     <div v-if="bugs.length" class="bug">
       <h3>{{ bugs[currentBugIndex].title }}</h3>
       <div>{{ bugs[currentBugIndex].description }}</div>
@@ -8,14 +7,23 @@
       <div>{{ bugs[currentBugIndex].date }}</div>
       <div>{{ bugs[currentBugIndex].reportedBy }}</div>
       <img :src="'bugs/' + bugs[currentBugIndex].imgPath + '.png'" alt="" />
-      <button v-on:click="handleClick">NOT A BUG</button>
-      <button v-on:click="handleClick">NOT GAMEPLAY RELEVANT</button>
-      <button v-on:click="handleClick">NEEDS FIXING</button>
-      <button v-on:click="handleClick">IMPORTANT BUG</button>
-      <button v-on:click="handleClick">GAME-BREAKING</button>
+      <div class="button-container">
+        <button class="severity-1" v-on:click="handleClick">NOT A BUG</button>
+        <button class="severity-2" v-on:click="handleClick">
+          NOT GAMEPLAY RELEVANT
+        </button>
+        <button class="severity-3" v-on:click="handleClick">
+          NEEDS FIXING
+        </button>
+        <button class="severity-4" v-on:click="handleClick">
+          IMPORTANT BUG
+        </button>
+        <button class="severity-5" v-on:click="handleClick">
+          GAME-BREAKING
+        </button>
+      </div>
     </div>
-
-    <div>
+    <div class="nav">
       <button :disabled="currentBugIndex === 0" @click="currentBugIndex--">
         Back
       </button>
@@ -67,22 +75,74 @@ onMounted(() => {
   ];
 });
 </script>
+
 <style lang="scss">
-.bug {
-  background-color: gray;
-  border-radius: 12px;
-  padding: 8px;
+.container {
   display: flex;
-  width: 100%;
   flex-direction: column;
-  gap: 4px;
+  gap: 8px;
+}
+
+h3 {
+  margin: 0;
+  padding-bottom: 8px;
+  color: greenyellow;
+}
+
+.bug {
+  border-radius: 12px;
+  outline: 2px solid green;
+  padding: 20px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 img {
   background-color: lightgray;
   border-radius: 4px;
+  outline: 2px solid green;
   min-height: 200px;
   width: 100%;
+  border-radius: 8px;
+}
+
+button {
+  height: 32px;
+  border: unset;
+  border-radius: 4px;
+
+  &.severity-1 {
+    background-color: gray;
+  }
+  &.severity-2 {
+    background-color: skyblue;
+  }
+  &.severity-3 {
+    background-color: yellow;
+  }
+  &.severity-4 {
+    background-color: orange;
+  }
+  &.severity-5 {
+    background-color: red;
+    color: white;
+  }
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nav {
+  background-color: green;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px;
   border-radius: 8px;
 }
 </style>

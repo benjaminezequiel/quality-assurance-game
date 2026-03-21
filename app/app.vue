@@ -9,7 +9,7 @@
 <style lang="scss">
 * {
   box-sizing: border-box;
-  font-family: sans-serif;
+  font-family: monospace;
 }
 .page-wrapper {
   min-height: 100svh;
@@ -22,6 +22,8 @@ body,
 html {
   margin: 0;
   display: flex;
+  background-color: black;
+  color: white;
   min-width: 100svw;
   flex: 1;
 }
