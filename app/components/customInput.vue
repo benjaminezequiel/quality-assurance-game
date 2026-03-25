@@ -29,7 +29,7 @@
 import { ref } from "vue";
 
 // Explicitly type model as string to satisfy v-model
-const model = ref<string>("");
+const model = defineModel<string>();
 
 defineProps<{
   label?: string;

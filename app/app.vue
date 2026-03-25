@@ -43,6 +43,7 @@
   width: 100%;
   display: flex;
   align-items: center;
+  overflow-x: hidden;
   justify-content: center;
   flex-direction: column;
   max-width: (--max-width);

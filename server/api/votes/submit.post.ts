@@ -12,8 +12,6 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  // ON CONFLICT handles the unique constraint gracefully —
-  // if the player already voted, update their vote instead of erroring
   const [vote] = await db`
     INSERT INTO votes (bug_id, player_name, severity)
     VALUES (${bugId}, ${playerName}, ${severity})

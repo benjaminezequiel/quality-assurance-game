@@ -1,19 +1,31 @@
 <template>
-  <div class="container">
-    <div v-if="bugs.length && currentBug" class="bug">
+  <div class="page-container">
+    <span class="nav-button">
+      <NuxtLink to="sessionPage"><- BACK TO SESSION OVERVIEW</NuxtLink>
+    </span>
+    <div v-if="allReviewed" class="all-reviewed">
+      <h1>All bugs reviewed!</h1>
+    </div>
+    <div v-if="bugs.length && currentBug && !allReviewed" class="bug container">
+      <div class="bug-header">
+        <h3>Bug #{{ currentBugIndex + 1 }}</h3>
+        <span>{{ currentBugIndex + 1 }} / {{ bugs.length }}</span>
+      </div>
       <img :src="currentBug.image_url" alt="Bug photo" />
       <div class="bug-info">
-        <h3>Bug #{{ currentBugIndex + 1 }}</h3>
         <div>{{ currentBug.description }}</div>
-        <div>{{ currentBug.category }}</div>
+        <div><span>CATEGORY:</span> {{ currentBug.category }}</div>
         <div v-if="currentBug.latitude && currentBug.longitude">
-          📍 {{ currentBug.latitude.toFixed(5) }},
+          <span>REPORTED LOCATION:</span> {{ currentBug.latitude.toFixed(5) }},
           {{ currentBug.longitude.toFixed(5) }}
         </div>
         <div>
-          🕐 {{ new Date(currentBug.reported_at).toLocaleDateString() }}
+          <span>REPORTED DATE:</span>
+          {{ new Date(currentBug.reported_at).toLocaleDateString() }}
         </div>
-        <div>👤 {{ currentBug.reported_by }}</div>
+        <div>
+          Reported by <b>{{ currentBug.reported_by }}</b>
+        </div>
       </div>
 
       <div class="button-container">
@@ -33,21 +45,8 @@
       </div>
     </div>
 
-    <div v-else class="bug">
-      <p>No bugs reported in this session yet.</p>
-    </div>
-
-    <div class="nav">
-      <button :disabled="currentBugIndex === 0" @click="currentBugIndex--">
-        Back
-      </button>
-      <span>{{ currentBugIndex + 1 }} / {{ bugs.length }}</span>
-      <button
-        :disabled="currentBugIndex === bugs.length - 1"
-        @click="currentBugIndex++"
-      >
-        Forward
-      </button>
+    <div v-else-if="!bugs.length" class="bug">
+      <p>No bugs to evaluate in this session yet.</p>
     </div>
   </div>
 </template>
@@ -55,9 +54,14 @@
 <script setup lang="ts">
 import { FetchError } from "ofetch";
 
-// Easily changeable client-side labels
+const allReviewed = computed(
+  () =>
+    bugs.value.length > 0 &&
+    bugs.value.every((b) => votesMap.value[b.id] != null),
+);
+
 const severityLabels = [
-  "NOT A BUG",
+  "NOT A BUG / DUPLICATE",
   "NOT GAMEPLAY RELEVANT",
   "NEEDS FIXING",
   "IMPORTANT BUG",
@@ -88,13 +92,19 @@ const bugs = ref<Bug[]>([]);
 const currentBugIndex = ref(0);
 const currentBug = computed(() => bugs.value[currentBugIndex.value]);
 
-// Track votes as a map of bugId -> severity for instant UI feedback
 const votesMap = ref<Record<number, number>>({});
+const duplicatesMap = ref<Record<number, boolean>>({});
 
 const currentVote = computed(() => {
   if (!currentBug.value) return null;
   return votesMap.value[currentBug.value.id] ?? null;
 });
+
+const currentIsDuplicate = computed(() => {
+  if (!currentBug.value) return false;
+  return duplicatesMap.value[currentBug.value.id] ?? false;
+});
+
 const submitting = ref(false);
 
 onMounted(async () => {
@@ -102,42 +112,40 @@ onMounted(async () => {
 
   const [fetchedBugs, fetchedVotes] = await Promise.all([
     $fetch<Bug[]>(`/api/bugs/${store.sessionCode}`),
-    $fetch<{ bug_id: number; severity: number }[]>(
+    $fetch<{ bug_id: number; severity: number; is_duplicate: boolean }[]>(
       `/api/votes/${store.sessionCode}`,
       { query: { playerName: store.playerName } },
     ),
   ]);
 
-  bugs.value = fetchedBugs;
+  // Exclude own bugs and sort chronologically
+  bugs.value = fetchedBugs
+    .filter((b) => b.reported_by !== store.playerName)
+    .sort(
+      (a, b) =>
+        new Date(a.reported_at).getTime() - new Date(b.reported_at).getTime(),
+    );
 
-  // Populate the votes map from existing votes
   fetchedVotes.forEach((v) => {
-    votesMap.value[v.bug_id] = v.severity;
+    if (v.is_duplicate) {
+      duplicatesMap.value[v.bug_id] = true;
+    } else {
+      votesMap.value[v.bug_id] = v.severity;
+    }
   });
 });
 
-const handleVote = async (severity: number) => {
-  if (!store.playerName || !currentBug.value) return;
-
+const submitVote = async (
+  bugId: number,
+  severity: number | null,
+  isDuplicate: boolean,
+) => {
   submitting.value = true;
-
   try {
     await $fetch("/api/votes/submit", {
       method: "POST",
-      body: {
-        bugId: currentBug.value.id,
-        playerName: store.playerName,
-        severity,
-      },
+      body: { bugId, playerName: store.playerName, severity, isDuplicate },
     });
-
-    // Update local map immediately for snappy UI
-    votesMap.value[currentBug.value.id] = severity;
-
-    // Move to next bug automatically if not on the last one
-    if (currentBugIndex.value < bugs.value.length - 1) {
-      currentBugIndex.value++;
-    }
   } catch (e: unknown) {
     if (e instanceof FetchError) {
       console.error("Failed to submit vote:", e.message);
@@ -146,24 +154,28 @@ const handleVote = async (severity: number) => {
     submitting.value = false;
   }
 };
+
+const handleVote = async (severity: number) => {
+  if (!currentBug.value) return;
+
+  votesMap.value[currentBug.value.id] = severity;
+  duplicatesMap.value[currentBug.value.id] = false;
+
+  await submitVote(currentBug.value.id, severity, false);
+
+  if (currentBugIndex.value < bugs.value.length - 1) {
+    currentBugIndex.value++;
+  }
+};
 </script>
 
-<style lang="scss">
-.container {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
+<style lang="scss" scoped>
 h3 {
-  margin: 0;
-  padding-bottom: 8px;
-  color: greenyellow;
+  color: var(--green);
 }
 
 .bug {
   border-radius: 12px;
-  outline: 2px solid green;
   padding: 20px;
   width: 100%;
   display: flex;
@@ -174,51 +186,49 @@ h3 {
 .bug-info {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  font-size: 0.9rem;
+  gap: 6px;
+  padding: 12px 0;
+
+  span {
+    color: var(--Gray600);
+  }
 }
 
 img {
   background-color: lightgray;
   border-radius: 8px;
   min-height: 200px;
+  margin: 0 -1px;
   width: 100%;
   object-fit: cover;
 }
 
 button {
-  height: 32px;
-  border: unset;
-  border-radius: 4px;
-  cursor: pointer;
-  opacity: 1;
-  transition:
-    opacity 0.2s,
-    outline 0.1s;
-
   &.active {
     outline: 2px solid white;
   }
-
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
   }
-
   &.severity-1 {
-    background-color: gray;
+    background-color: var(--Gray600);
   }
   &.severity-2 {
-    background-color: skyblue;
+    background-color: var(--blue);
   }
   &.severity-3 {
-    background-color: yellow;
+    background-color: var(--yellow);
   }
   &.severity-4 {
-    background-color: orange;
+    background-color: var(--orange);
   }
   &.severity-5 {
-    background-color: red;
+    background-color: var(--red);
+    color: white;
+  }
+  &.duplicate {
+    background-color: var(--Gray600);
     color: white;
   }
 }
@@ -230,11 +240,35 @@ button {
 }
 
 .nav {
-  background-color: green;
+  background-color: var(--green);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 4px;
   border-radius: 8px;
+}
+
+.page-container {
+  width: 100%;
+}
+
+b {
+  color: var(--green);
+}
+
+.bug-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  span {
+    font-size: 13px;
+    color: var(--Gray600);
+  }
+}
+
+.nav-button {
+  display: flex;
+  padding-bottom: 12px;
 }
 </style>

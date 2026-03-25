@@ -298,7 +298,7 @@ const handleSubmit = async () => {
     if (longitude.value) formData.append("longitude", String(longitude.value));
 
     await $fetch("/api/bugs/upload", { method: "POST", body: formData });
-    router.push("/session");
+    router.push("/sessionPage");
   } catch (e: unknown) {
     if (e instanceof FetchError) {
       console.error("Bug upload failed:", e.status, e.data);
