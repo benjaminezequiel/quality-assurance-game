@@ -31,17 +31,19 @@
       <button class="bug-popup__close" @click="selectedBug = null">✕</button>
       <img :src="selectedBug.image_url" class="bug-popup__image" />
       <div class="bug-popup__body">
-        <span class="bug-popup__category">{{ selectedBug.category }}</span>
+        <div class="category-wrap">
+          <span class="category"> CATEGORY: </span>
+          {{ selectedBug.category }}
+        </div>
         <p class="bug-popup__description">{{ selectedBug.description }}</p>
         <div class="bug-popup__meta">
-          <span>👤 {{ selectedBug.reported_by }}</span>
-          <span
-            >🕐
+          <span>Reported by {{ selectedBug.reported_by }}</span>
+          <span>
             {{ new Date(selectedBug.reported_at).toLocaleDateString() }}</span
           >
         </div>
         <div v-if="selectedBug.operating_system" class="bug-popup__meta">
-          <span>💻 {{ selectedBug.operating_system }}</span>
+          <span>OS: {{ selectedBug.operating_system }}</span>
         </div>
       </div>
     </div>
@@ -294,8 +296,6 @@ const watchPlayerPosition = () => {
       } else {
         playerMarker.setLatLng(latlng);
       }
-
-      checkPlayerInArea();
     },
     (err) => console.warn("Geolocation error:", err),
     { enableHighAccuracy: true },
@@ -386,7 +386,7 @@ const handleMapClick = async (e: L.LeafletMouseEvent) => {
 .map {
   width: 100%;
   height: 100%;
-  min-height: 400px;
+  min-height: 600px;
 }
 
 .map-controls {
@@ -487,13 +487,14 @@ const handleMapClick = async (e: L.LeafletMouseEvent) => {
 
 .bug-popup {
   position: absolute;
-  bottom: 12px;
-  left: 12px;
-  right: 12px;
+  bottom: 8px;
+  left: 8px;
+  right: 8px;
   z-index: 1000;
-  background: white;
-  border-radius: 12px;
+  background: var(--Gray100);
+  border-radius: 8px;
   overflow: hidden;
+  border: 1px solid var(--Gray400);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   display: flex;
   flex-direction: column;
@@ -505,13 +506,11 @@ const handleMapClick = async (e: L.LeafletMouseEvent) => {
   right: 8px;
   background: rgba(0, 0, 0, 0.5);
   color: white;
-  border: none;
-  border-radius: 50%;
   width: 28px;
   min-height: unset;
   height: 28px;
   cursor: pointer;
-  font-size: 0.8rem;
+  font-size: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -520,7 +519,10 @@ const handleMapClick = async (e: L.LeafletMouseEvent) => {
 .bug-popup__image {
   width: 100%;
   height: 160px;
+  margin-bottom: 0;
+  border: unset;
   object-fit: cover;
+  border-radius: 0;
 }
 
 .bug-popup__body {
@@ -530,22 +532,20 @@ const handleMapClick = async (e: L.LeafletMouseEvent) => {
   gap: 6px;
 }
 
-.bug-popup__category {
-  font-size: 0.75rem;
-  font-weight: bold;
-  text-transform: uppercase;
-  color: green;
-}
-
 .bug-popup__description {
-  margin: 0;
-  font-size: 0.9rem;
+  max-width: 90%;
+  text-wrap: balance;
+  margin-bottom: 6px;
 }
 
 .bug-popup__meta {
   display: flex;
   gap: 12px;
   font-size: 0.8rem;
-  color: #666;
+  color: var(--Gray400);
+}
+
+.category {
+  color: var(--Gray600);
 }
 </style>
