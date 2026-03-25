@@ -2,6 +2,10 @@
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
-  modules: ["@pinia/nuxt", "pinia-plugin-persistedstate/nuxt"],
+  modules: [
+    "@pinia/nuxt",
+    "pinia-plugin-persistedstate/nuxt",
+    "@vercel/analytics",
+  ],
   css: ["leaflet/dist/leaflet.css"],
 });
