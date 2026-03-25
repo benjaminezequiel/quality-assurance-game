@@ -14,14 +14,14 @@
       </button>
       <button v-if="gameArea" @click="clearGameArea">Clear Area</button>
     </div>
-
+    <!-- 
     <div
       v-if="playerInsideArea !== null"
       class="area-indicator"
       :class="playerInsideArea ? 'inside' : 'outside'"
     >
       {{ playerInsideArea ? "✓ Inside game area" : "✗ Outside game area" }}
-    </div>
+    </div> -->
 
     <div v-if="isDrawing" class="map-hint">
       Click point {{ drawingPoints.length + 1 }} of 4 to define the game area
@@ -131,8 +131,6 @@ const loadGameArea = async () => {
         fillOpacity: 0.1,
         dashArray: "6 4",
       }).addTo(map);
-
-      checkPlayerInArea();
     }
   } catch (e) {
     console.error("Failed to load game area:", e);
@@ -195,14 +193,6 @@ const isPointInPolygon = (point: L.LatLng, polygon: L.LatLng[]): boolean => {
   }
 
   return inside;
-};
-
-const checkPlayerInArea = () => {
-  if (!playerLatLng.value || !gameArea.value) {
-    playerInsideArea.value = null;
-    return;
-  }
-  playerInsideArea.value = isPointInPolygon(playerLatLng.value, gameArea.value);
 };
 
 // -------------------------------------------------------
@@ -332,7 +322,6 @@ const clearGameArea = () => {
   gameAreaPolygon?.remove();
   gameAreaPolygon = null;
   gameArea.value = null;
-  playerInsideArea.value = null;
 };
 
 const handleMapClick = async (e: L.LeafletMouseEvent) => {
@@ -380,7 +369,6 @@ const handleMapClick = async (e: L.LeafletMouseEvent) => {
     isDrawing.value = false;
     map.getContainer().style.cursor = "";
 
-    checkPlayerInArea();
     await saveGameArea(gameArea.value);
   }
 };
