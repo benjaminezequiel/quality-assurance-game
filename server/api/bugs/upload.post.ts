@@ -25,10 +25,16 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 404, message: "Session not found" });
   }
 
-  // Upload image to Vercel Blob
-  const { url } = await put(`bugs/${sessionCode}/${Date.now()}.jpg`, image, {
-    access: "public",
-  });
+  const arrayBuffer = await image.arrayBuffer();
+
+  const { url } = await put(
+    `bugs/${sessionCode}/${Date.now()}.jpg`,
+    Buffer.from(arrayBuffer),
+    {
+      access: "public",
+      contentType: "image/jpeg", // force correct type regardless of what mobile sent
+    },
+  );
 
   // Insert bug into database
   const [bug] = await db`
