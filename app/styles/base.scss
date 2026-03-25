@@ -1,0 +1,218 @@
+:root {
+  --purple: #2d248d;
+  --blue: #2a71eb;
+  --sea-green: #21ffb1;
+  --green: #4ecd2b;
+  --yellow: #f2d003;
+  --orange: #ff7417;
+  --red: #da014d;
+  --pink: #f242ff;
+}
+
+:root:has(.light-mode) {
+  // * {
+  //   transition-property: background-color, color;
+  //   transition-duration: 200ms;
+  // }
+  // light mode
+  color-scheme: light;
+  --dark-mode: 0;
+  --brand-color: var(--red);
+  --ascii-color: var(--Gray600);
+  --always-dark-container: var(--Gray800);
+  --ascii-shadow: 0;
+  --background: #f0f0f1;
+  --Gray100: #eaeaeb;
+  --Gray200: #cbcbd0;
+  --Gray300: #a6a7b0;
+  --Gray400: #848591;
+  --Gray500: #686974;
+  --Gray600: #4f4f59;
+  --Gray700: #38383e;
+  --Gray800: #212125;
+  --Gray900: #000000;
+}
+
+:root {
+  // dark mode
+  color-scheme: dark;
+  --dark-mode: 1;
+  --brand-color: var(--sea-green);
+  --ascii-shadow: 8px;
+  --ascii-color: var(--blue);
+  --always-dark-container: var(--Gray200);
+  --background: #0d0d0f;
+  --Gray100: #161618;
+  --Gray200: #2d2d31;
+  --Gray300: #46474f;
+  --Gray400: #61616d;
+  --Gray500: #7c7d89;
+  --Gray600: #9a9ba5;
+  --Gray700: #babac1;
+  --Gray800: #dadbde;
+  --Gray900: #fcfcfc;
+}
+
+:root {
+  /** ====== SURFACE COLORS ====== */
+  --page-background: var(--background);
+
+  --light-container: var(--Gray100);
+  --lighter-container: var(--Gray200);
+  --container-inverse: var(--Gray800);
+
+  /** ====== TEXT & CONTENT COLORS ====== */
+  --text-color--inverse: var(--Gray100);
+
+  --text-color--subtle-3: var(--Gray300);
+  --text-color--subtle-2: var(--Gray500);
+  --text-color--subtle-1: var(--Gray700);
+  --text-color--default: var(--Gray800);
+
+  /** ====== BORDER COLORS ====== */
+  --border-color--inverse: var(--Gray700);
+  --border-color--subtle: color-mix(in oklch, var(--Gray200), transparent);
+  --border-color--default: var(--Gray200);
+
+  /** ====== SHADOWS COLORS ====== */
+  --shadow-dark-side: color-mix(in oklch, var(--background), transparent 50%);
+  --shadow-light-side: color-mix(in oklch, var(--Gray900), transparent 90%);
+
+  --double-shadow--light:
+    0px 4px 16px -2px var(--shadow-dark-side),
+    0px -2px 12px -1px var(--shadow-light-side);
+
+  /** ====== TYPE ====== */
+  --base-weight: 400;
+}
+
+:root {
+  --new-dark-gray-25: #020203;
+  --new-dark-gray-50: #0f0f10;
+  --new-dark-gray-75: #161619;
+  --new-dark-gray-100: #1b1b1e;
+  --new-dark-gray-200: #1e1e21;
+  --new-dark-gray-300: #29292d;
+  --new-dark-gray-400: #333338;
+
+  --new-gray-500: #5f606e;
+  --new-gray-600: #737480;
+  --new-gray-700: #888993;
+  --new-gray-800: #9d9ea7;
+  --new-gray-900: #b4b4bb;
+  --new-gray-1000: #cacacf;
+  --new-gray-1100: #e1e1e4;
+  --new-gray-1200: #f8f8f8;
+
+  /* Purple */
+  --purple-25: oklch(12% 0.047 288);
+  --purple-50: oklch(13.5% 0.054 288);
+  --purple-75: oklch(18% 0.075 288);
+  --purple-100: oklch(25.5% 0.112 288);
+  --purple-200: oklch(35.5% 0.156 288);
+  --purple-300: oklch(48.5% 0.213 288);
+  --purple-400: oklch(61.5% 0.17 288);
+  --purple-500: oklch(74.5% 0.107 288);
+  --purple-600: oklch(84.5% 0.058 288);
+  --purple-700: oklch(92% 0.026 288);
+  --purple-800: oklch(96.5% 0.009 288);
+  --purple-900: oklch(98% 0.005 288);
+
+  /* Blue */
+  --blue-25: oklch(12% 0.038 260.58);
+  --blue-50: oklch(13.5% 0.044 260.58);
+  --blue-75: oklch(18% 0.061 260.58);
+  --blue-100: oklch(25.5% 0.091 260.58);
+  --blue-200: oklch(35.5% 0.127 260.58);
+  --blue-300: oklch(48.5% 0.173 260.58);
+  --blue-400: oklch(61.5% 0.176 260.58);
+  --blue-500: oklch(74.5% 0.111 260.58);
+  --blue-600: oklch(84.5% 0.06 260.58);
+  --blue-700: oklch(92% 0.027 260.58);
+  --blue-800: oklch(96.5% 0.01 260.58);
+  --blue-900: oklch(98% 0.005 260.58);
+
+  /* Sea Green */
+  --sea-green-25: oklch(12% 0.026 161.65);
+  --sea-green-50: oklch(13.5% 0.029 161.65);
+  --sea-green-75: oklch(18% 0.039 161.65);
+  --sea-green-100: oklch(25.5% 0.056 161.65);
+  --sea-green-200: oklch(35.5% 0.078 161.65);
+  --sea-green-300: oklch(48.5% 0.106 161.65);
+  --sea-green-400: oklch(61.5% 0.135 161.65);
+  --sea-green-500: oklch(74.5% 0.164 161.65);
+  --sea-green-600: oklch(84.5% 0.186 161.65);
+  --sea-green-700: oklch(92% 0.118 161.65);
+  --sea-green-800: oklch(96.5% 0.041 161.65);
+  --sea-green-900: oklch(98% 0.021 161.65);
+
+  /* Green */
+  --green-25: oklch(12% 0.032 140.09);
+  --green-50: oklch(13.5% 0.036 140.09);
+  --green-75: oklch(18% 0.051 140.09);
+  --green-100: oklch(25.5% 0.076 140.09);
+  --green-200: oklch(35.5% 0.106 140.09);
+  --green-300: oklch(48.5% 0.145 140.09);
+  --green-400: oklch(61.5% 0.183 140.09);
+  --green-500: oklch(74.5% 0.222 140.09);
+  --green-600: oklch(84.5% 0.235 140.09);
+  --green-700: oklch(92% 0.125 140.09);
+  --green-800: oklch(96.5% 0.043 140.09);
+  --green-900: oklch(98% 0.022 140.09);
+
+  /* Yellow */
+  --yellow-25: oklch(12% 0.024 97.11);
+  --yellow-50: oklch(13.5% 0.027 97.11);
+  --yellow-75: oklch(18% 0.037 97.11);
+  --yellow-100: oklch(25.5% 0.052 97.11);
+  --yellow-200: oklch(35.5% 0.072 97.11);
+  --yellow-300: oklch(48.5% 0.1 97.11);
+  --yellow-400: oklch(61.5% 0.126 97.11);
+  --yellow-500: oklch(74.5% 0.153 97.11);
+  --yellow-600: oklch(84.5% 0.174 97.11);
+  --yellow-700: oklch(92% 0.128 97.11);
+  --yellow-800: oklch(96.5% 0.049 97.11);
+  --yellow-900: oklch(98% 0.026 97.11);
+
+  /* Orange */
+  --orange-25: oklch(12% 0.03 46.85);
+  --orange-50: oklch(13.5% 0.034 46.85);
+  --orange-75: oklch(18% 0.047 46.85);
+  --orange-100: oklch(25.5% 0.07 46.85);
+  --orange-200: oklch(35.5% 0.098 46.85);
+  --orange-300: oklch(48.5% 0.134 46.85);
+  --orange-400: oklch(61.5% 0.17 46.85);
+  --orange-500: oklch(74.5% 0.166 46.85);
+  --orange-600: oklch(84.5% 0.086 46.85);
+  --orange-700: oklch(92% 0.037 46.85);
+  --orange-800: oklch(96.5% 0.013 46.85);
+  --orange-900: oklch(98% 0.007 46.85);
+
+  /* Red */
+  --red-25: oklch(12% 0.043 13.65);
+  --red-50: oklch(13.5% 0.049 13.65);
+  --red-75: oklch(18% 0.068 13.65);
+  --red-100: oklch(25.5% 0.102 13.65);
+  --red-200: oklch(35.5% 0.142 13.65);
+  --red-300: oklch(48.5% 0.193 13.65);
+  --red-400: oklch(61.5% 0.245 13.65);
+  --red-500: oklch(74.5% 0.156 13.65);
+  --red-600: oklch(84.5% 0.079 13.65);
+  --red-700: oklch(92% 0.034 13.65);
+  --red-800: oklch(96.5% 0.012 13.65);
+  --red-900: oklch(98% 0.007 13.65);
+
+  /* Pink */
+  --pink-25: oklch(12% 0.05 324.98);
+  --pink-50: oklch(13.5% 0.057 324.98);
+  --pink-75: oklch(18% 0.08 324.98);
+  --pink-100: oklch(25.5% 0.119 324.98);
+  --pink-200: oklch(35.5% 0.165 324.98);
+  --pink-300: oklch(48.5% 0.227 324.98);
+  --pink-400: oklch(61.5% 0.287 324.98);
+  --pink-500: oklch(74.5% 0.244 324.98);
+  --pink-600: oklch(84.5% 0.132 324.98);
+  --pink-700: oklch(92% 0.059 324.98);
+  --pink-800: oklch(96.5% 0.021 324.98);
+  --pink-900: oklch(98% 0.011 324.98);
+}
