@@ -71,7 +71,20 @@
       <CustomInput label="Operating System" v-model="form.operatingSystem" />
       <CustomInput label="Location" :model-value="locationLabel" disabled />
     </div>
-
+    <pre
+      v-if="debugError"
+      style="
+        background: red;
+        color: white;
+        padding: 8px;
+        font-size: 11px;
+        white-space: pre-wrap;
+        word-break: break-all;
+      "
+    >
+  {{ debugError }}
+</pre
+    >
     <button @click="handleSubmit" :disabled="submitting" class="highlight">
       {{ submitting ? "Submitting..." : "Submit Bug" }}
     </button>
@@ -81,7 +94,7 @@
 <script setup lang="ts">
 import { FetchError } from "ofetch";
 import imageCompression from "browser-image-compression";
-
+const debugError = ref<string | null>(null);
 const router = useRouter();
 const store = useSessionStore();
 
@@ -336,10 +349,14 @@ const handleSubmit = async () => {
     router.push("/sessionPage");
   } catch (e: unknown) {
     if (e instanceof FetchError) {
-      console.error("Bug upload failed:", e.status, e.data);
+      debugError.value = JSON.stringify(
+        { status: e.status, data: e.data },
+        null,
+        2,
+      );
       errors.image = e.data?.message ?? "Upload failed, please try again";
     } else {
-      console.error("Unexpected error:", e);
+      debugError.value = String(e);
       errors.image = "Something went wrong, please try again";
     }
   } finally {
