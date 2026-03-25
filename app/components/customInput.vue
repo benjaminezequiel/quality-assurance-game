@@ -52,14 +52,13 @@ defineEmits(["blur"]);
 input,
 textarea {
   border-radius: 6px;
-  padding-left: 8px;
-  padding-top: 6px; /* aligns text at top */
+  padding: 6px;
   width: 100%;
   border: 2px solid transparent;
   transition: border-color 0.2s;
   font-family: inherit;
   font-size: 1rem;
-  background-color: var(--light-container);
+  background-color: var(--Gray200);
   color: var(--text-color--default);
   -webkit-appearance: none;
   -webkit-border-radius: 6px;
