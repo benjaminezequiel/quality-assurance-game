@@ -13,7 +13,6 @@
 
       <div class="flex-column instructions">
         <details>
-          ]
           <summary>Read the introduction!</summary>
           <p>
             Quality Assurance is an <b>Alternative-Reality-Game (ARG)</b> where

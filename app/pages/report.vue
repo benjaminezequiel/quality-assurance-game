@@ -452,7 +452,7 @@ button {
 <style lang="scss">
 .description {
   input {
-    height: 120px;
+    width: 32px;
     align-items: flex-start;
     display: flex;
   }
