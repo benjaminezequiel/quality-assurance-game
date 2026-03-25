@@ -4,14 +4,4 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ["@pinia/nuxt", "pinia-plugin-persistedstate/nuxt"],
   css: ["leaflet/dist/leaflet.css"],
-  app: {
-    head: {
-      script: [
-        {
-          src: "/_vercel/insights/script.js",
-          defer: true,
-        },
-      ],
-    },
-  },
 });
