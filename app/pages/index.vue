@@ -50,18 +50,12 @@
         </div>
       </div>
     </div>
-    <div class="footer flex-column">
-      <p class="footnote">
-        * When submitting photographs to Quality Assurance you consent to share
-        location data that will be publicly available to other users. Please be
-        considerate of personal privacy and seek permission from anyone who is
-        identifiable in your photographs.
-      </p>
-      <hr />
-      <p>Reality Inc. 30 Tweedy Rd, Bromley B31 3FE</p>
-      <p>Quality Assurance by Reality Inc.</p>
-      <p>2026. All rights reserved.</p>
-    </div>
+    <p class="footnote">
+      * When submitting photographs to Quality Assurance you consent to share
+      location data that will be publicly available to other users. Please be
+      considerate of personal privacy and seek permission from anyone who is
+      identifiable in your photographs.
+    </p>
   </div>
 </template>
 
@@ -155,20 +149,6 @@ const handleJoin = async () => {
   gap: 16px;
 }
 
-button {
-  text-transform: uppercase;
-  border: unset;
-  height: 48px;
-  border-radius: 6px;
-  color: var(--Gray100);
-  background-color: var(--Gray900);
-  cursor: pointer;
-
-  &.highlight {
-    background-color: var(--brand-color);
-  }
-}
-
 .intro-page {
   display: flex;
   flex-direction: column;
@@ -207,22 +187,16 @@ button {
   margin: 16px 0;
 }
 
-.footer {
-  align-items: center;
-  color: var(--Gray600);
-  gap: 0px;
-  font-size: 13px;
-
-  hr {
-    border-color: var(--Gray100);
-    width: 100%;
-    margin: 12px 0;
-  }
-}
-
 .logo-img {
   max-width: 100%;
   margin-bottom: 24px;
   margin-top: 16px;
+}
+
+.footnote {
+  color: var(--Gray600);
+  width: 100%;
+  gap: 0px;
+  font-size: 13px;
 }
 </style>

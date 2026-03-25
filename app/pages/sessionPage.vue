@@ -11,65 +11,97 @@
         </p>
       </div>
 
-      <details>
-        <summary>Read the introduction!</summary>
-        <p>
-          Welcome to your first day as a Junior QA Tester at Reality Inc. To
-          begin your orientation please familiarise yourself with the company
-          ethos and quality assurance tasks you will be performing. Here at
-          Reality Inc we are dedicated to producing the most realistic game
-          environments ever witnessed.
-        </p>
-        <p>
-          In fact you may not have realised but you are already in the game,
-          everything around you is an ultra-high resolution depiction of our
-          custom designed virtual world. Don’t worry, first time testers are
-          often shocked by the verisimilitude.
-        </p>
-        <p>
-          It can take some time to adjust. Join Quality Assurance as a Junior QA
-          Tester who is seeking bugs and glitches in the world around us. Treat
-          your local environment as an in production virtual environment that
-          requires extensive testing to log and correct numerous errors.
-        </p>
-      </details>
-      <span>GAME MAP</span>
+      <div class="flex-column instructions">
+        <details>
+          <summary>Read the introduction!</summary>
+          <p>
+            Welcome to your first day as a Junior QA Tester at Reality Inc. To
+            begin your orientation please familiarise yourself with the quality
+            assurance tasks you will be performing.
+          </p>
+          <p>
+            Here at Reality Inc we are dedicated to producing the most realistic
+            game environments ever witnessed. In fact you may not have realised
+            but you are already in the game, everything around you is an
+            ultra-high resolution depiction of our custom designed virtual
+            world.
+          </p>
+        </details>
+        <details>
+          <summary>Instructions on how to play</summary>
+          <h4>Step 1: Choose an area on the map</h4>
+          <p>
+            Begin by defining your area of play, click to place each corner
+            point. After the fourth point has been placed the system will
+            automatically complete a quadrant to de-bug within.
+          </p>
+          <h4>Step 2: Go on a reporting session!</h4>
+          <p>
+            Explore the marked locality and look out for any visual, NPC
+            behavioural or physics-based bugs that may be the result of human or
+            system errors. Strategically organise a route to ensure a
+            comprehensive coverage is achieved. If with others you may wish to
+            designate sub-sections.
+          </p>
+          <h4>Step 3: Log your findings!</h4>
+          <p>
+            Whenever you encounter a bug use the in-app camera system to
+            document it. Before submitting you will need to fill out a
+            bug-report to help level designers assess and fix it.
+          </p>
+        </details>
+      </div>
+
+      <div class="container session-overview">
+        <h4>Performance check</h4>
+        <div v-for="player in players" :key="player.id" class="player">
+          <span>{{ player.name }}</span>
+          <span class="bug-count">
+            {{ bugCountByPlayer[player.name] ?? 0 }} bugs
+          </span>
+        </div>
+      </div>
+
+      <div class="flex-column">
+        <button @click="router.push('report')" class="highlight">
+          SUBMIT NEW BUGS
+        </button>
+        <button @click="router.push('bugEvaluation')">EVALUATE BUGS</button>
+        <button @click="router.push('results')" class="subtle">
+          Check the results
+        </button>
+      </div>
       <Map
         :bugs="bugs"
         :player-name="playerName || ''"
         :session-code="sessionCode || ''"
       />
-
-      <p>{{ numberofBugs }} bugs submitted.</p>
-      <div class="container">
-        <h3>{{ players.length }} player{{ players.length > 0 ? "" : "s" }}</h3>
-        <div v-for="player in players" :key="player.id" class="player">
-          {{ player.name }}
-        </div>
+      <div class="flex-column">
+        <button @click="handleLeave" class="extra-subtle">LEAVE SESSION</button>
       </div>
-
-      <h4>Game phases:</h4>
-
-      <button @click="router.push('report')">SUBMIT NEW BUGS</button>
-      <button @click="router.push('bugEvaluation')">EVALUATE BUGS</button>
-      <button @click="handleLeave">LEAVE SESSION</button>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { FetchError } from "ofetch";
 import { storeToRefs } from "pinia";
 import type { Bug } from "~/components/map.client.vue";
 
 const bugs = ref<Bug[]>([]);
 const store = useSessionStore();
 const router = useRouter();
-const numberofBugs = ref(0);
 const { sessionCode, playerName, players } = storeToRefs(store);
-const { leaveSession, setPlayerName, fetchPlayers } = store;
+const { leaveSession, fetchPlayers } = store;
 
 let interval: ReturnType<typeof setInterval> | null = null;
+
+// Derive bug count per player name from the bugs array
+const bugCountByPlayer = computed(() =>
+  bugs.value.reduce<Record<string, number>>((acc, bug) => {
+    acc[bug.reported_by] = (acc[bug.reported_by] ?? 0) + 1;
+    return acc;
+  }, {}),
+);
 
 const handleLeave = () => {
   leaveSession();
@@ -77,22 +109,23 @@ const handleLeave = () => {
 };
 
 onMounted(async () => {
-  if (!sessionCode.value) return;
+  if (!sessionCode.value) {
+    router.replace("/");
+    return;
+  }
+
   await fetchPlayers();
-  interval = setInterval(fetchPlayers, 3000);
-  bugs.value = await $fetch(`/api/bugs/${store.sessionCode}`);
+  bugs.value = await $fetch<Bug[]>(`/api/bugs/${sessionCode.value}`);
+
+  // Poll both players and bugs every 5 seconds
+  interval = setInterval(async () => {
+    await fetchPlayers();
+    bugs.value = await $fetch<Bug[]>(`/api/bugs/${sessionCode.value}`);
+  }, 5000);
 });
 
 onUnmounted(() => {
   if (interval) clearInterval(interval);
-});
-
-onMounted(() => {
-  if (!sessionCode.value) {
-    console.log("no current session");
-  } else {
-    console.log(sessionCode.value);
-  }
 });
 </script>
 
@@ -103,14 +136,6 @@ p {
 
 b {
   color: var(--green);
-}
-button {
-  border: unset;
-  height: 48px;
-  border-radius: 6px;
-  color: var(--Gray100);
-  background-color: var(--Gray900);
-  cursor: pointer;
 }
 
 .logo {
@@ -144,19 +169,21 @@ button {
   width: 100%;
   height: 100%;
 }
-details {
-  display: flex;
-  cursor: pointer;
-  flex-direction: column;
-  gap: 16px;
-  color: var(--green);
-  width: 100%;
-  margin-bottom: -16px;
-  margin-top: -4px;
 
-  p {
-    margin-bottom: 24px;
-    color: white;
+.player {
+  display: flex;
+  justify-content: space-between;
+
+  .bug-count {
+    color: var(--Gray700);
+  }
+}
+
+.session-overview {
+  h4 {
+    margin-bottom: 8px;
+    color: var(--Gray700);
+    text-transform: uppercase;
   }
 }
 </style>

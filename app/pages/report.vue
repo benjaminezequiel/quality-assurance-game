@@ -39,12 +39,18 @@
       <span v-if="errors.image" class="error">{{ errors.image }}</span>
     </div>
 
-    <button :disabled="capturedImage !== null" @click="fileInput?.click()">
+    <button
+      :disabled="capturedImage !== null"
+      @click="fileInput?.click()"
+      class="subtle"
+    >
       Upload image instead
     </button>
 
     <CustomInput
       label="Description"
+      class="description"
+      :textarea="true"
       v-model="form.description"
       :error="errors.description"
     />
@@ -54,6 +60,10 @@
       :options="categories"
       :error="errors.category"
     />
+    <NuxtLink to="typesofBugs"
+      >Learn more about the <b>types of bugs</b>!</NuxtLink
+    >
+
     <div class="double-input">
       <CustomInput label="Operating System" v-model="form.operatingSystem" />
       <CustomInput label="Location" :model-value="locationLabel" disabled />
@@ -216,11 +226,11 @@ onMounted(() => {
 
 // Form
 const categories = [
-  "Visual Glitch",
-  "Physics Error",
+  "Asset Misplacement",
+  "Texture Error",
   "NPC Behaviour",
-  "World Geometry",
-  "Audio Bug",
+  "NPC Dialogue",
+  "Gameplay System Error",
   "Other",
 ];
 
@@ -303,12 +313,12 @@ const handleSubmit = async () => {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .report-form {
   width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: center;
   gap: 12px;
   max-height: 1200px;
   height: 100%;
@@ -317,13 +327,13 @@ const handleSubmit = async () => {
 .camera {
   overflow: hidden;
   background-color: var(--Gray100);
-  height: 100%;
   border-radius: 12px;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   border: 1px solid black;
+  aspect-ratio: 1 / 1;
 }
 
 video {
@@ -407,5 +417,25 @@ button {
 .double-input {
   display: flex;
   gap: 6px;
+  width: 100%;
+}
+
+.subtle {
+  height: 24px;
+  margin-top: -8px;
+  background-color: transparent !important;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  color: var(--Gray600) !important;
+}
+</style>
+
+<style lang="scss">
+.description {
+  input {
+    height: 120px;
+    align-items: flex-start;
+    display: flex;
+  }
 }
 </style>

@@ -4,6 +4,12 @@
     <!-- <NuxtWelcome /> -->
     <!-- <h3>{{ data }}</h3> -->
     <NuxtPage />
+    <div class="footer flex-column">
+      <hr />
+      <p>Reality Inc. 30 Tweedy Rd, Bromley B31 3FE</p>
+      <p>Quality Assurance by Reality Inc.</p>
+      <p>2026. All rights reserved.</p>
+    </div>
   </div>
 </template>
 
@@ -68,5 +74,71 @@ html {
 
 .text-wrap {
   text-wrap: balance;
+}
+
+button {
+  text-transform: uppercase;
+  border: unset;
+  height: 48px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: var(--Gray100);
+  background-color: var(--Gray900);
+  cursor: pointer;
+
+  &.highlight {
+    background-color: var(--brand-color);
+  }
+  &.subtle {
+    background-color: var(--Gray200);
+    color: var(--Gray800);
+  }
+  &.extra-subtle {
+    background-color: transparent;
+    border: 1px solid var(--red);
+    color: var(--red);
+  }
+}
+
+.footer {
+  align-items: center;
+  color: var(--Gray600);
+  width: 100%;
+  gap: 0px;
+  font-size: 13px;
+
+  hr {
+    border-color: var(--Gray100);
+    width: 100%;
+    margin: 12px 0;
+  }
+}
+
+details {
+  user-select: none;
+  display: flex;
+  cursor: pointer;
+  flex-direction: column;
+  gap: 16px;
+  color: var(--green);
+  width: 100%;
+  margin-bottom: -16px;
+
+  p {
+    margin-bottom: 24px;
+    color: white;
+  }
+  p:last-child {
+    border-bottom: 1px solid var(--Gray200);
+    padding-bottom: 16px;
+  }
+}
+
+a {
+  cursor: pointer;
+  color: var(--green);
+  text-decoration: none;
 }
 </style>
