@@ -49,6 +49,12 @@
             document it. Before submitting you will need to fill out a
             bug-report to help level designers assess and fix it.
           </p>
+          <h4>Step 4: Evaluate QA peers!</h4>
+          <p>
+            Use the map to visit the bug reported by other Quality Assurance
+            testers and with the comment + rating system contribute to an
+            overall understanding.
+          </p>
         </details>
       </div>
 
