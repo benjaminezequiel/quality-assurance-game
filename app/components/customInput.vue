@@ -59,6 +59,10 @@ textarea {
   transition: border-color 0.2s;
   font-family: inherit;
   font-size: 1rem;
+  background-color: var(--light-container);
+  color: var(--text-color--default);
+  -webkit-appearance: none;
+  -webkit-border-radius: 6px;
 }
 
 input {

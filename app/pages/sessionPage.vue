@@ -7,24 +7,25 @@
     <div v-if="sessionCode" class="session-page flex-column">
       <div class="container">
         <p>
-          Share the code <b>{{ sessionCode }}</b> to invite your collegues!
+          Share the code <b>{{ sessionCode }}</b> to invite your colleagues!
         </p>
       </div>
 
       <div class="flex-column instructions">
         <details>
+          ]
           <summary>Read the introduction!</summary>
           <p>
-            Welcome to your first day as a Junior QA Tester at Reality Inc. To
-            begin your orientation please familiarise yourself with the quality
-            assurance tasks you will be performing.
+            Quality Assurance is an <b>Alternative-Reality-Game (ARG)</b> where
+            you play as a Junior QA Tester who is seeking bugs in the world
+            around us.
           </p>
           <p>
-            Here at Reality Inc we are dedicated to producing the most realistic
-            game environments ever witnessed. In fact you may not have realised
-            but you are already in the game, everything around you is an
-            ultra-high resolution depiction of our custom designed virtual
-            world.
+            Treat your local environment as an in
+            <b>production virtual environment</b> that requires extensive
+            testing to log and correct numerous errors. Use your phone to upload
+            <b>geo-located photos</b> and complete an error report. Evaluate the
+            reports submitted by other players.
           </p>
         </details>
         <details>

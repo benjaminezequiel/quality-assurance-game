@@ -67,7 +67,7 @@
 
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .bug-types {
     display: flex;
     flex-direction: column;

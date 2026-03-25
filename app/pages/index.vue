@@ -2,15 +2,16 @@
   <div class="intro-page">
     <img src="/green-logo.png" alt="" class="logo-img" />
     <p>
-      Quality Assurance is an <b>Alternative-Reality-Game (ARG)</b> where you
-      play as a Junior QA Tester who is seeking bugs in the world around us.
+      Welcome to your first day as a <b>Junior QA Tester</b> at Reality Inc. To
+      begin your orientation please familiarise yourself with the quality
+      assurance tasks you will be performing.
     </p>
     <p>
-      Treat your local environment as an in
-      <b>production virtual environment</b> that requires extensive testing to
-      log and correct numerous errors. Use your phone to upload
-      <b>geo-located photos</b> and complete an error report. Evaluate the
-      reports submitted by other players.
+      Here at Reality Inc we are dedicated to producing the
+      <b>most realistic game environments</b> ever witnessed. In fact you may
+      not have realised but you are already in the game, everything around you
+      is an <b>ultra-high resolution depiction</b> of our custom designed
+      virtual world.
     </p>
     <p>
       Start by choosing a nickname and either creating a session or joining an

@@ -1,13 +1,16 @@
 <template>
   <div class="report-form">
+    <span class="nav-button">
+      <NuxtLink to="sessionPage"><- BACK TO SESSION OVERVIEW</NuxtLink>
+    </span>
     <div class="camera">
-      <video ref="video" autoplay playsinline></video>
+      <video ref="video" autoplay playsinline muted></video>
       <canvas ref="canvas" style="display: none" />
       <input
         ref="fileInput"
         type="file"
         accept="image/*"
-        style="display: none"
+        class="hidden-file-input"
         @change="handleFileUpload"
       />
 
@@ -69,7 +72,7 @@
       <CustomInput label="Location" :model-value="locationLabel" disabled />
     </div>
 
-    <button @click="handleSubmit" :disabled="submitting">
+    <button @click="handleSubmit" :disabled="submitting" class="highlight">
       {{ submitting ? "Submitting..." : "Submit Bug" }}
     </button>
   </div>
@@ -151,25 +154,28 @@ const startCamera = async () => {
     errors.image = "Could not access camera";
   }
 };
-
-const capturePhoto = () => {
+const capturePhoto = async () => {
   if (!video.value || !canvas.value) return;
   const ctx = canvas.value.getContext("2d");
   if (!ctx) return;
 
+  // Set canvas size to video size
   canvas.value.width = video.value.videoWidth;
   canvas.value.height = video.value.videoHeight;
   ctx.drawImage(video.value, 0, 0);
 
-  canvas.value.toBlob(
-    async (blob) => {
-      if (!blob) return;
-      capturedBlob.value = blob;
-      capturedImage.value = URL.createObjectURL(blob);
-    },
-    "image/jpeg",
-    0.9,
-  );
+  // Await blob conversion to ensure it's ready
+  const blob: Blob | null = await new Promise((resolve) => {
+    canvas.value!.toBlob(resolve, "image/jpeg", 0.9);
+  });
+
+  if (!blob) {
+    errors.image = "Failed to capture image";
+    return;
+  }
+
+  capturedBlob.value = blob;
+  capturedImage.value = URL.createObjectURL(blob);
 };
 
 const handleFileUpload = (event: Event) => {
@@ -181,7 +187,8 @@ const handleFileUpload = (event: Event) => {
     return;
   }
 
-  capturedBlob.value = file;
+  // Convert File to Blob for consistent handling across platforms (iOS fix)
+  capturedBlob.value = new Blob([file], { type: file.type || "image/jpeg" });
   capturedImage.value = URL.createObjectURL(file);
   stopCamera();
 };
@@ -282,13 +289,20 @@ const handleSubmit = async () => {
   submitting.value = true;
 
   try {
+    // Ensure blob is properly typed for iOS compatibility
+    const blob = capturedBlob.value!;
+    const typeHint = blob.type || "image/jpeg";
+
     const compressed = await imageCompression(
-      new File([capturedBlob.value!], "bug.jpg", { type: "image/jpeg" }),
+      new File([blob.slice(0, blob.size, typeHint)], "bug.jpg", {
+        type: "image/jpeg",
+      }),
       { maxSizeMB: 0.5, maxWidthOrHeight: 1920, useWebWorker: true },
     );
 
     const formData = new FormData();
-    formData.append("image", compressed);
+    // iOS requires explicit filename as third parameter in FormData.append
+    formData.append("image", compressed, "bug.jpg");
     formData.append("sessionCode", store.sessionCode);
     formData.append("description", form.description);
     formData.append("category", form.category);
@@ -325,6 +339,7 @@ const handleSubmit = async () => {
 }
 
 .camera {
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
   overflow: hidden;
   background-color: var(--Gray100);
   border-radius: 12px;
@@ -334,10 +349,14 @@ const handleSubmit = async () => {
   justify-content: center;
   border: 1px solid black;
   aspect-ratio: 1 / 1;
+  aspect-ratio: 1 / 1;
+  min-height: 280px;
 }
 
 video {
+  width: 100%;
   height: 100%;
+  object-fit: cover;
 }
 
 .camera-controls {
@@ -437,5 +456,15 @@ button {
     align-items: flex-start;
     display: flex;
   }
+}
+
+.hidden-file-input {
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
 }
 </style>
