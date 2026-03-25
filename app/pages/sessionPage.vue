@@ -63,6 +63,7 @@
         <div v-for="player in players" :key="player.id" class="player">
           <span>{{ player.name }}</span>
           <span class="bug-count">
+            <button @click="handleKick(player.id)">KICK</button>
             {{ bugCountByPlayer[player.name] ?? 0 }} bugs
           </span>
         </div>
@@ -114,6 +115,15 @@ const handleLeave = () => {
   router.push("/");
 };
 
+const handleKick = async (playerId: number) => {
+  if (!sessionCode.value) return;
+  await $fetch(`/api/sessions/${sessionCode.value}/kick`, {
+    method: "POST",
+    body: { playerId },
+  });
+  await fetchPlayers();
+};
+
 onMounted(async () => {
   if (!sessionCode.value) {
     router.replace("/");
@@ -152,6 +162,7 @@ b {
 .header {
   width: 100%;
   display: flex;
+  height: fit-content;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
@@ -160,6 +171,7 @@ b {
   h1 {
     font-size: 24px;
     line-height: 100%;
+    margin: 0;
     font-weight: 450;
   }
 }
@@ -182,6 +194,13 @@ b {
 
   .bug-count {
     color: var(--Gray700);
+
+    button {
+      height: auto;
+      background-color: transparent;
+      color: var(--red-500);
+      font-size: 14px;
+    }
   }
 }
 

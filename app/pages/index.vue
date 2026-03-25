@@ -131,6 +131,7 @@ const handleJoin = async () => {
   try {
     setPlayerName(playerNickname.value);
     await joinSession(joinSessionCode.value);
+    router.push("/sessionPage");
   } catch (e: unknown) {
     if (e instanceof FetchError && e.status === 404) {
       sessionCodeError.value =

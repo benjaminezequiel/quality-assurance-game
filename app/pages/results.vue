@@ -100,7 +100,7 @@ const { data: results, pending } = await useFetch<Results>(
 );
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 h2 {
   color: var(--green);
   margin-bottom: 8px;
