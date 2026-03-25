@@ -14,16 +14,26 @@
 <style lang="scss">
 @use "./styles/base" as *;
 
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap");
+
 * {
   box-sizing: border-box;
-  font-family: monospace;
+  font-family: "Jetbrains Mono";
   margin: 0;
 }
+.container {
+  background-color: var(--Gray100);
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--Gray200);
+  overflow: hidden;
+}
+
 .page-wrapper {
   min-height: 100svh;
   height: 100%;
-  max-width: 400px;
-  padding: 16px;
+  max-width: 600px;
+  padding: 28px;
   width: 100%;
   display: flex;
   align-items: center;
@@ -38,6 +48,7 @@ html {
   display: flex;
   background-color: black;
   color: white;
+  overflow-x: hidden;
   min-width: 100svw;
   flex: 1;
 }
@@ -53,5 +64,9 @@ html {
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+.text-wrap {
+  text-wrap: balance;
 }
 </style>

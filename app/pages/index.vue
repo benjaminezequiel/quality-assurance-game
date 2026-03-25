@@ -1,27 +1,30 @@
 <template>
   <div class="intro-page">
-    <h3>Quality Assurance</h3>
+    <img src="/green-logo.png" alt="" class="logo-img" />
     <p>
-      Quality Assurance: The Game is an Alternative-Reality-Game (ARG) where you
+      Quality Assurance is an <b>Alternative-Reality-Game (ARG)</b> where you
       play as a Junior QA Tester who is seeking bugs in the world around us.
-      Treat your local environment as an in production virtual environment that
-      requires extensive testing to log and correct numerous errors. Use your
-      phone to upload geo-located photos and complete an error report. Evaluate
-      the reports submitted by other players.
     </p>
     <p>
-      Currently only a free-roam mode is available, competitive team play modes
-      coming soon!
+      Treat your local environment as an in
+      <b>production virtual environment</b> that requires extensive testing to
+      log and correct numerous errors. Use your phone to upload
+      <b>geo-located photos</b> and complete an error report. Evaluate the
+      reports submitted by other players.
+    </p>
+    <p>
+      Start by choosing a nickname and either creating a session or joining an
+      existing one.
     </p>
 
     <div class="session-management container">
       <div v-if="sessionCode" class="existing-game flex-column">
         <h3>Welcome, {{ playerName }}.</h3>
-        <p>
+        <p class="text-wrap">
           You are participating on session <b>{{ sessionCode }}</b
           >.
         </p>
-        <button @click="handleContinue">CONTINUE GAME</button>
+        <button @click="handleContinue" class="highlight">CONTINUE GAME</button>
         <button @click="handleLeave">LEAVE SESSION</button>
       </div>
       <div v-else class="new-game">
@@ -32,7 +35,9 @@
           @blur="validateNickname"
         />
         <hr class="divider" />
-        <button @click="handleCreate">Create New Session</button>
+        <button @click="handleCreate" class="highlight">
+          Create New Session
+        </button>
         <hr class="divider" />
         <div class="flex-column">
           <CustomInput
@@ -41,16 +46,22 @@
             v-model="joinSessionCode"
             :error="sessionCodeError"
           />
-          <button @click="handleJoin">Join Session</button>
+          <button @click="handleJoin">Join Existing Session</button>
         </div>
       </div>
     </div>
-    <p>
-      *When submitting photographs to Quality Assurance: The Game you consent to
-      share location data that will be publicly available to other users. Please
-      be considerate of personal privacy and seek permission from anyone who is
-      identifiable in your photographs.
-    </p>
+    <div class="footer flex-column">
+      <p class="footnote">
+        * When submitting photographs to Quality Assurance you consent to share
+        location data that will be publicly available to other users. Please be
+        considerate of personal privacy and seek permission from anyone who is
+        identifiable in your photographs.
+      </p>
+      <hr />
+      <p>Reality Inc. 30 Tweedy Rd, Bromley B31 3FE</p>
+      <p>Quality Assurance by Reality Inc.</p>
+      <p>2026. All rights reserved.</p>
+    </div>
   </div>
 </template>
 
@@ -138,14 +149,6 @@ const handleJoin = async () => {
 </script>
 
 <style lang="scss" scoped>
-.container {
-  background-color: var(--Gray100);
-  padding: 12px;
-  border-radius: 12px;
-  border: 1px solid var(--Gray200);
-  overflow: hidden;
-}
-
 .new-game {
   display: flex;
   flex-direction: column;
@@ -153,18 +156,27 @@ const handleJoin = async () => {
 }
 
 button {
+  text-transform: uppercase;
   border: unset;
   height: 48px;
   border-radius: 6px;
   color: var(--Gray100);
   background-color: var(--Gray900);
   cursor: pointer;
+
+  &.highlight {
+    background-color: var(--brand-color);
+  }
 }
 
 .intro-page {
   display: flex;
   flex-direction: column;
   gap: 16px;
+
+  b {
+    color: var(--brand-color);
+  }
 }
 
 .new-game-join {
@@ -193,5 +205,24 @@ button {
 
 .session-management {
   margin: 16px 0;
+}
+
+.footer {
+  align-items: center;
+  color: var(--Gray600);
+  gap: 0px;
+  font-size: 13px;
+
+  hr {
+    border-color: var(--Gray100);
+    width: 100%;
+    margin: 12px 0;
+  }
+}
+
+.logo-img {
+  max-width: 100%;
+  margin-bottom: 24px;
+  margin-top: 16px;
 }
 </style>
