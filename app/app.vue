@@ -3,6 +3,7 @@
     <!-- <NuxtRouteAnnouncer /> -->
     <!-- <NuxtWelcome /> -->
     <!-- <h3>{{ data }}</h3> -->
+    <Analytics />
     <NuxtPage />
     <div class="footer flex-column">
       <hr />
@@ -14,6 +15,7 @@
 </template>
 
 <script lang="ts" setup>
+import { Analytics } from '@vercel/analytics/nuxt';
 // const { data } = await useFetch("/api/sessions/create", { method: "POST" });
 </script>
 
