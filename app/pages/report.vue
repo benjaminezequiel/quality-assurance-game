@@ -177,8 +177,7 @@ const capturePhoto = async () => {
   capturedBlob.value = blob;
   capturedImage.value = URL.createObjectURL(blob);
 };
-
-const handleFileUpload = (event: Event) => {
+const handleFileUpload = async (event: Event) => {
   const file = (event.target as HTMLInputElement).files?.[0];
   if (!file) return;
 
@@ -187,9 +186,33 @@ const handleFileUpload = (event: Event) => {
     return;
   }
 
-  // Convert File to Blob for consistent handling across platforms (iOS fix)
-  capturedBlob.value = new Blob([file], { type: file.type || "image/jpeg" });
-  capturedImage.value = URL.createObjectURL(file);
+  // Transcode to JPEG via canvas to handle HEIC/HEIF and other mobile formats
+  try {
+    const bitmap = await createImageBitmap(file);
+    const cvs = document.createElement("canvas");
+    cvs.width = bitmap.width;
+    cvs.height = bitmap.height;
+    const ctx = cvs.getContext("2d")!;
+    ctx.drawImage(bitmap, 0, 0);
+    bitmap.close();
+
+    const blob: Blob | null = await new Promise((resolve) =>
+      cvs.toBlob(resolve, "image/jpeg", 0.9),
+    );
+
+    if (!blob) {
+      errors.image = "Failed to process image";
+      return;
+    }
+
+    capturedBlob.value = blob;
+    capturedImage.value = URL.createObjectURL(blob);
+  } catch {
+    // createImageBitmap may not support HEIC on some browsers — fall back to raw file
+    capturedBlob.value = new Blob([file], { type: file.type || "image/jpeg" });
+    capturedImage.value = URL.createObjectURL(file);
+  }
+
   stopCamera();
 };
 
@@ -294,9 +317,7 @@ const handleSubmit = async () => {
     const typeHint = blob.type || "image/jpeg";
 
     const compressed = await imageCompression(
-      new File([blob.slice(0, blob.size, typeHint)], "bug.jpg", {
-        type: "image/jpeg",
-      }),
+      new File([capturedBlob.value!], "bug.jpg", { type: "image/jpeg" }),
       { maxSizeMB: 0.5, maxWidthOrHeight: 1920, useWebWorker: true },
     );
 
